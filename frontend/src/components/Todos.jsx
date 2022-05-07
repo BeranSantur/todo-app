@@ -1,24 +1,43 @@
 import Todo from "./Todo";
+import { Link } from "react-router-dom";
 
-const Todos = ({ todos }) => {
+const Todos = ({ todos, deleteTodo, editTodo }) => {
   return (
-    <>
-      <table>
-        <thead className="table-headers">
-          <tr>
-            <th>Task</th>
-            <th>Day</th>
-            <th>Priority</th>
-            <th>Done</th>
-          </tr>
-        </thead>
-        <tbody>
-          {todos.map((todo) => (
-            <Todo {...todo} key={todo._id} />
-          ))}
-        </tbody>
-      </table>
-    </>
+    <div className="table-container">
+      <h1 className="todo-header">Todo App</h1>
+      <Link to="/addTodo">
+        <button className="add-todo-btn">Add Todo</button>
+      </Link>
+      {todos.length !== 0 ? (
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Priority</th>
+              <th>Day</th>
+              <th>Done</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.map((todo) => {
+              console.log(todo._id);
+              return (
+                <Todo
+                  {...todo}
+                  key={todo._id}
+                  deleteTodo={deleteTodo}
+                  editTodo={editTodo}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+      ) : (
+        <div>Nothing to show</div>
+      )}
+    </div>
   );
 };
 

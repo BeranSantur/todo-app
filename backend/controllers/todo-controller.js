@@ -1,5 +1,8 @@
 const Todo = require("../models/Todo");
-const { isTodoValid } = require("../validations/todo-validation");
+const {
+  isAddTodoValid,
+  isUpdateTodoValid,
+} = require("../validations/todo-validation");
 
 const getTodos = async (req, res) => {
   try {
@@ -19,10 +22,13 @@ const getTodoById = async (req, res) => {
 
 const saveTodo = async (req, res) => {
   const newTodo = req.body;
-  const { error } = isTodoValid(newTodo);
+  const { error } = isAddTodoValid(newTodo);
   if (error) {
     res.json(error.details[0].message);
   } else {
+    if (!newTodo.done) {
+      newTodo.done = "no";
+    }
     const createdUser = await Todo.create(newTodo);
     res.json(createdUser);
   }
@@ -30,7 +36,7 @@ const saveTodo = async (req, res) => {
 
 const updateTodo = async (req, res) => {
   const todo = req.body;
-  const { error } = isTodoValid(todo);
+  const { error } = isUpdateTodoValid(todo);
   if (error) {
     res.json(error.details[0].message);
   } else {
@@ -45,8 +51,8 @@ const updateTodo = async (req, res) => {
 
 const deleteTodo = async (req, res) => {
   try {
-    await Todo.deleteOne({ id: req.params.id });
-    res.json("user has been deleted");
+    const deletedTodo = await Todo.deleteOne({ id: req.params.id });
+    res.json(deletedTodo);
   } catch (error) {
     res.status(400).json("There was an error ", error);
   }

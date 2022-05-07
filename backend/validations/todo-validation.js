@@ -1,14 +1,26 @@
 const Joi = require("joi");
 
-const schema = Joi.object({
+const addTodoSchema = Joi.object({
   task: Joi.string().required(),
   day: Joi.string().required(),
   priority: Joi.string().required(),
-  done: Joi.string().required(),
+  done: Joi.string(),
 });
 
-const isTodoValid = (todo) => {
-  return schema.validate(todo);
+const updateTodoSchema = Joi.object({
+  _id: Joi.string(),
+  task: Joi.string().required(),
+  day: Joi.string().required(),
+  priority: Joi.string().required(),
+  done: Joi.string(),
+});
+
+const isUpdateTodoValid = (todo) => {
+  return updateTodoSchema.validate(todo);
 };
 
-module.exports = { isTodoValid };
+const isAddTodoValid = (todo) => {
+  return addTodoSchema.validate(todo);
+};
+
+module.exports = { isAddTodoValid, isUpdateTodoValid };
